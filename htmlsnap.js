@@ -55,7 +55,7 @@ function htmlsnap(root, opt) {
       console.error('Element error:', y, err);
     }
   })?.outerHTML || '';
-  return opt.idtrack || opt.llm ? [html, map] : html;
+  return opt.map || opt.idtrack || opt.llm ? [html, map] : html;
 }
 
 export default htmlsnap;
