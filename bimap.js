@@ -38,14 +38,6 @@ class BiMap {
   hasValue(value) {
     return this.reverse.has(value);
   }
-
-  clone() {
-    const clone = new BiMap();
-    for (const [key, value] of this.forward.entries()) {
-      clone.set(key, value);
-    }
-    return clone;
-  }
 }
 
 export default BiMap;

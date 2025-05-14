@@ -29,32 +29,38 @@ function htmlsnap(root, opt) {
     'role',
   ];
   opt.removeInvisible ??= opt.llm;
-  let map = opt.map?.clone?.();
-  let html = filterclone(root, (x, y) => {
-    try {
-      if (x.nodeType === Node.COMMENT_NODE) return x;
-      if (x.nodeType === Node.TEXT_NODE) {
-        if (opt.collapseWhitespace || opt.llm) x.textContent = x.textContent.trim().replaceAll(/\s+/g, ' ');
-        return x;
-      }
-      if (opt.removeInvisible && !visible(y, opt.llm)) return;
-      if (opt.attrs) {
-        for (let { name: z } of x.attributes) {
-          let reattrs = opt.attrs.filter(x => x instanceof RegExp);
-          if (!opt.attrs.includes(z) && !reattrs.find(w => w.test(z))) x.removeAttribute(z);
+  let { map } = opt;
+  let html =
+    filterclone(root, (x, y) => {
+      try {
+        if (x.nodeType === Node.COMMENT_NODE) return x;
+        if (x.nodeType === Node.TEXT_NODE) {
+          if (opt.collapseWhitespace || opt.llm)
+            x.textContent = x.textContent.trim().replaceAll(/\s+/g, ' ');
+          return x;
         }
+        if (opt.removeInvisible && !visible(y, opt.llm)) return;
+        if (opt.attrs) {
+          for (let { name: z } of x.attributes) {
+            let reattrs = opt.attrs.filter(x => x instanceof RegExp);
+            if (!opt.attrs.includes(z) && !reattrs.find(w => w.test(z)))
+              x.removeAttribute(z);
+          }
+        }
+        if (
+          opt.idtrack ||
+          (opt.llm && /^a|input|textarea|select|button$/i.test(x.tagName))
+        ) {
+          let id = map.getKey(y) || crypto.randomUUID().split('-').at(-1);
+          x.setAttribute('data-htmlsnap', id);
+          map.set(id, y);
+        }
+        (x.value || x.value === '') && x.setAttribute('value', x.value);
+        return x;
+      } catch (err) {
+        console.error('Element error:', y, err);
       }
-      if (opt.idtrack || (opt.llm && /^a|input|textarea|select|button$/i.test(x.tagName))) {
-        let id = map.getKey(y) || crypto.randomUUID().split('-').at(-1);
-        x.setAttribute('data-htmlsnap', id);
-        map.set(id, y);
-      }
-      (x.value || x.value === '') && x.setAttribute('value', x.value);
-      return x;
-    } catch (err) {
-      console.error('Element error:', y, err);
-    }
-  })?.outerHTML || '';
+    })?.outerHTML || '';
   return opt.map || opt.idtrack || opt.llm ? [html, map] : html;
 }
 

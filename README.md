@@ -73,7 +73,7 @@ const [html, map] = htmlsnap(document.body, {
 
 ### `opt.map` (default: `undefined`)
 - An optional pre-existing `BiMap` instance to use for ID tracking.
-- If provided, it is cloned and used in the output.
+- If provided, it is updated and also used in the output (same instance).
 - Required if you want to share or reuse mappings across multiple snapshots.
 
 ---
