@@ -1,5 +1,5 @@
 import BiMap from './bimap.js';
-import filterclone from 'https://esm.sh/@camilaprav/filterclone';
+import filterclone from 'https://esm.sh/@camilaprav/filterclone@2.0.1';
 
 function visible(x, llm) {
   if (llm && x.classList?.contains?.('ai-invisible')) return false;
