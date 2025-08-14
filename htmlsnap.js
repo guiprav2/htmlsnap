@@ -30,6 +30,7 @@ export default function htmlsnap(root, opt) {
     'id',
     'role',
   ];
+  opt.trimAttrs &&= 500;
   opt.removeInvisible ??= opt.llm;
   let { map } = opt;
   let html = filterclone(root, (x, y) => {
@@ -44,6 +45,13 @@ export default function htmlsnap(root, opt) {
         for (let { name: z } of x.attributes) {
           let reattrs = opt.attrs.filter(x => x instanceof RegExp);
           if (!opt.attrs.includes(z) && !reattrs.find(w => w.test(z))) x.removeAttribute(z);
+        }
+      }
+      if (opt.trimAttrs) {
+        for (let { name: z, value: w } of x.attributes) {
+          if (w.length > opt.trimAttrs) {
+            x.setAttribute(name, w.slice(0, opt.trimAttrs) + ' [trunc]');
+          }
         }
       }
       if (opt.idtrack || (opt.llm && /^a|input|textarea|select|button$/i.test(x.tagName))) {

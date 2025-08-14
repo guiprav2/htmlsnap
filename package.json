@@ -1,6 +1,6 @@
 {
   "name": "@camilaprav/htmlsnap",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Lightweight utility for generating a filtered and optionally ID-annotated HTML snapshot of a DOM subtree",
   "main": "htmlsnap.js",
   "browser": "htmlsnap.js",
