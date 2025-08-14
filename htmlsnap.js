@@ -50,7 +50,7 @@ export default function htmlsnap(root, opt) {
       if (opt.trimAttrs) {
         for (let { name: z, value: w } of x.attributes) {
           if (w.length > opt.trimAttrs) {
-            x.setAttribute(name, w.slice(0, opt.trimAttrs) + ' [trunc]');
+            x.setAttribute(z, w.slice(0, opt.trimAttrs) + ' [trunc]');
           }
         }
       }
