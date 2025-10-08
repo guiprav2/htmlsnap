@@ -55,7 +55,7 @@ export default function htmlsnap(root, opt) {
         }
       }
       if (opt.idtrack || (opt.llm && /^a|input|textarea|select|button$/i.test(x.tagName))) {
-        let id = map.getKey(y) || crypto.randomUUID().split('-').at(-1);
+        let id = map.getKey(y) || y.getAttribute('data-htmlsnap') || crypto.randomUUID().split('-').at(-1);
         x.setAttribute('data-htmlsnap', id);
         map.set(id, y);
       }
