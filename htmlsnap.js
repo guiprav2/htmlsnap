@@ -1,6 +1,8 @@
 import BiMap from './bimap.js';
 import filterclone from 'https://esm.sh/@camilaprav/filterclone@2.0.1';
 
+function resolve(x) { return typeof x === 'function' ? x() : x }
+
 function visible(x, llm) {
   if (llm && x.classList?.contains?.('ai-invisible')) return false;
   if (llm && x.classList?.contains?.('ai-only')) return true;
@@ -55,9 +57,9 @@ export default function htmlsnap(root, opt) {
         }
       }
       if (opt.idtrack || (opt.llm && /^a|input|textarea|select|button$/i.test(x.tagName))) {
-        let id = y.getAttribute('data-htmlsnap') || map.getKey(y) || crypto.randomUUID().split('-').at(-1);
+        let id = y.getAttribute('data-htmlsnap') || resolve(map).getKey(y) || crypto.randomUUID().split('-').at(-1);
         x.setAttribute('data-htmlsnap', id);
-        map.set(id, y);
+        resolve(map).set(id, y);
       }
       (x.value || x.value === '') && x.setAttribute('value', x.value);
       (x.src && (x.src.startsWith('data:') || x.src.length > 512)) && x.removeAttribute('src');
@@ -66,5 +68,6 @@ export default function htmlsnap(root, opt) {
       console.error('Element error:', y, err);
     }
   }, opt.iframes)?.outerHTML || '';
-  return opt.idtrack || opt.llm ? [html, map] : html;
+  if (opt.idtrack || opt.llm) for (let [id, el] of resolve(map).entries()) if (!root.contains(el)) resolve(map).delete(id);
+  return opt.idtrack || opt.llm ? [html, resolve(map)] : html;
 }
