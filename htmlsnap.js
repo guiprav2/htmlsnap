@@ -68,6 +68,5 @@ export default function htmlsnap(root, opt) {
       console.error('Element error:', y, err);
     }
   }, opt.iframes)?.outerHTML || '';
-  if (opt.idtrack || opt.llm) for (let [id, el] of resolve(map).forward.entries()) if (!root.contains(el)) resolve(map).delete(id);
   return opt.idtrack || opt.llm ? [html, resolve(map)] : html;
 }
